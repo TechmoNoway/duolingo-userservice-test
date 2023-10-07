@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class CreateRoleRequest {
-    private String password;
+public class AuthenticationResponse {
+    private String token;
+    private String message;
 }

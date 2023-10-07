@@ -1,6 +1,7 @@
 package duolingobackenduserservice.restcontroller;
 
 
+import duolingobackenduserservice.dto.AuthenticationResponse;
 import duolingobackenduserservice.dto.CheckLoginRequest;
 import duolingobackenduserservice.dto.RegistryUserRequest;
 import duolingobackenduserservice.model.User;
@@ -37,17 +38,18 @@ public class UserAPI {
 
         return ResponseEntity.ok(result);
     }
-
+    //    This method is similar as register method
     @PostMapping("/insertuser")
     public ResponseEntity<?> doInsertUser(@RequestBody RegistryUserRequest registryUserRequest){
         HashMap<String, Object> result = new HashMap<>();
 
         try {
-            userService.insertUser(registryUserRequest);
+            AuthenticationResponse data = userService.register(registryUserRequest);
             result.put("success", true);
             result.put("message", "Success to call api doInsertUser");
-            result.put("data", registryUserRequest);
+            result.put("data", data);
         }catch (Exception e){
+            System.out.println(e);
             result.put("success", false);
             result.put("message", "Fail to call api doInsertUser");
             result.put("data", null);
@@ -57,14 +59,16 @@ public class UserAPI {
         return ResponseEntity.ok(result);
     }
 
+//    This method is similar as login method
     @PostMapping("/checklogin")
     public ResponseEntity<?> doCheckLogin(@RequestBody CheckLoginRequest checkLoginRequest){
         HashMap<String, Object> result = new HashMap<>();
 
         try {
+            AuthenticationResponse data = userService.login(checkLoginRequest);
             result.put("success", true);
             result.put("message", "Success to call api doInsertUser");
-            result.put("data", userService.checkLogin(checkLoginRequest));
+            result.put("data", data);
         }catch (Exception e){
             result.put("success", false);
             result.put("message", "Fail to call api doInsertUser");

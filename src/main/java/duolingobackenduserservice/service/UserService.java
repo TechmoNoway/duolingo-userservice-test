@@ -1,5 +1,6 @@
 package duolingobackenduserservice.service;
 
+import duolingobackenduserservice.dto.AuthenticationResponse;
 import duolingobackenduserservice.dto.CheckLoginRequest;
 import duolingobackenduserservice.dto.RegistryUserRequest;
 import duolingobackenduserservice.model.User;
@@ -14,4 +15,7 @@ public interface UserService {
     User checkLogin(CheckLoginRequest checkLoginRequest);
 
     User getUser(String username);
+
+    AuthenticationResponse login(CheckLoginRequest checkLoginRequest);
+    AuthenticationResponse register(RegistryUserRequest registryUserRequest);
 }
