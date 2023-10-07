@@ -45,4 +45,9 @@ public class UserServiceImpl implements UserService {
                 .findAny()
                 .orElse(null);
     }
+
+    @Override
+    public User getUser(String username) {
+        return userMapper.getUser(username);
+    }
 }

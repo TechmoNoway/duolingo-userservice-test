@@ -12,4 +12,6 @@ public interface UserService {
     void insertUser(RegistryUserRequest registryUserRequest);
 
     User checkLogin(CheckLoginRequest checkLoginRequest);
+
+    User getUser(String username);
 }
