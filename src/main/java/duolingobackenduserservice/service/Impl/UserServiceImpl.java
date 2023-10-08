@@ -51,7 +51,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User checkLogin(CheckLoginRequest checkLoginRequest) {
         return userMapper.getAllUsers().stream()
-                .filter(user -> checkLoginRequest.getUsername().equals(user.getUsername()))
+                .filter(user -> checkLoginRequest.getUsername().equals(user.getUsername())
+                    && passwordEncoder.encode(checkLoginRequest.getPassword()).matches(checkLoginRequest.getPassword())
+                )
                 .findAny()
                 .orElse(null);
     }
@@ -68,17 +70,10 @@ public class UserServiceImpl implements UserService {
         if (oldUser == null) {
             return AuthenticationResponse.builder()
                     .token(null)
-                    .message("This user is not exist")
+                    .message("Username or Password is incorrect !!")
                     .build();
         }
 
-//        Check password
-        if(passwordEncoder.encode(oldUser.getPassword()).matches(checkLoginRequest.getPassword())){
-            return AuthenticationResponse.builder()
-                    .token(null)
-                    .message("This user password is not matched")
-                    .build();
-        }
 
 
         String token = jwtService.generateToken(oldUser);
