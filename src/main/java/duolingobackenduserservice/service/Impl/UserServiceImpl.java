@@ -51,8 +51,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User checkLogin(CheckLoginRequest checkLoginRequest) {
         return userMapper.getAllUsers().stream()
-                .filter(user -> checkLoginRequest.getUsername().equals(user.getUsername())
-                    && passwordEncoder.encode(checkLoginRequest.getPassword()).matches(checkLoginRequest.getPassword())
+                .filter(user -> (checkLoginRequest.getUsername().equals(user.getUsername())
+                    && passwordEncoder.encode(user.getPassword()).matches(checkLoginRequest.getPassword()))
+                    || (user.getUsername().matches(checkLoginRequest.getUsername()))
+
                 )
                 .findAny()
                 .orElse(null);
@@ -86,8 +88,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public AuthenticationResponse register(RegistryUserRequest registryUserRequest) {
 
-        System.out.println(registryUserRequest.getPassword());
-
         //        Check user is exist
         CheckLoginRequest checkedUser = CheckLoginRequest.builder()
                 .password(registryUserRequest.getPassword())
@@ -95,8 +95,14 @@ public class UserServiceImpl implements UserService {
                 .build();
         User oldUser = this.checkLogin(checkedUser);
         if (oldUser != null) {
+            String token = null;
+
+            if(registryUserRequest.getSocial().matches("social")){
+                token = jwtService.generateToken(oldUser);
+            }
+
             return AuthenticationResponse.builder()
-                    .token(null)
+                    .token(token)
                     .message("This user is exist")
                     .build();
         }
@@ -123,5 +129,6 @@ public class UserServiceImpl implements UserService {
 
 
 //    Below method is for authentication of user when start use website
+
 
 }
