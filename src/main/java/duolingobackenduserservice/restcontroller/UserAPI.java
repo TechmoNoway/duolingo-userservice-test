@@ -4,6 +4,7 @@ package duolingobackenduserservice.restcontroller;
 import duolingobackenduserservice.dto.AuthenticationResponse;
 import duolingobackenduserservice.dto.CheckLoginRequest;
 import duolingobackenduserservice.dto.RegistryUserRequest;
+import duolingobackenduserservice.dto.UpdatedRequest;
 import duolingobackenduserservice.model.User;
 import duolingobackenduserservice.service.UserService;
 import io.micrometer.common.lang.NonNull;
@@ -101,4 +102,22 @@ public class UserAPI {
         return ResponseEntity.ok(result);
     }
 
+    @PutMapping("/updateUser")
+    public ResponseEntity<?> updateUser(@RequestBody UpdatedRequest user){
+        HashMap<String, Object> result = new HashMap<>();
+
+        try {
+            AuthenticationResponse data = userService.updateUser(user);
+            result.put("success", true);
+            result.put("message", "Success to call api doInsertUser");
+            result.put("data", data);
+        }catch (Exception e){
+            result.put("success", false);
+            result.put("message", "Fail to call api doInsertUser");
+            result.put("data", null);
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok(result);
+    }
 }

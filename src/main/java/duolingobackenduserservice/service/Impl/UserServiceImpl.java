@@ -4,6 +4,7 @@ import duolingobackenduserservice.config.JwtService;
 import duolingobackenduserservice.dto.AuthenticationResponse;
 import duolingobackenduserservice.dto.CheckLoginRequest;
 import duolingobackenduserservice.dto.RegistryUserRequest;
+import duolingobackenduserservice.dto.UpdatedRequest;
 import duolingobackenduserservice.mapper.UserMapper;
 import duolingobackenduserservice.model.User;
 import duolingobackenduserservice.service.UserService;
@@ -125,6 +126,32 @@ public class UserServiceImpl implements UserService {
 
 
         return new AuthenticationResponse(token, "Register is successfully");
+    }
+
+    @Override
+    public AuthenticationResponse updateUser(UpdatedRequest request) {
+        try {
+
+
+            if(!request.getOldPassword().matches("")){
+                User oldUser = userMapper.getUser(request.getUsername());
+                if(!passwordEncoder.encode(oldUser.getPassword()).matches(request.getOldPassword())){
+                    return new AuthenticationResponse(null, "Current Password is incorrect!!");
+                }
+            }
+
+            if(request.getPassword().length() < 15) {
+                request.setPassword(passwordEncoder.encode(CharBuffer.wrap(request.getPassword())));
+            }
+            userMapper.updateUser(request);
+
+            String token = jwtService.generateToken(request);
+
+            return new AuthenticationResponse(token, "Update is successfully");
+        } catch (Exception e) {
+            return new AuthenticationResponse(null, "Error Page");
+        }
+
     }
 
 

@@ -50,17 +50,26 @@
                          , roleid
                          , createdat
                          , updatedat
-                         ) VALUES (
-                           #{id}
-                         , #{username}
-                         , #{email}
-                         , #{password}
-                         , #{avatar}
-                         , #{roleId}
-                         , #{createdAt}
-                         , #{updatedAt}
-                         );
+        ) VALUES (
+                     #{id}
+                 , #{username}
+                 , #{email}
+                 , #{password}
+                 , #{avatar}
+                 , #{roleId}
+                 , #{createdAt}
+                 , #{updatedAt}
+                 );
     </insert>
 
+    <update id="updateUser">
+        UPDATE user
+        SET PASSWORD = #{password},
+            AVATAR = #{avatar},
+            EMAIL = #{email},
+            USERNAME = #{username},
+            ROLEID = #{roleId}
+        WHERE ID=#{id}
+    </update>
 
 </mapper>

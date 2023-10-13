@@ -3,6 +3,7 @@ package duolingobackenduserservice.service;
 import duolingobackenduserservice.dto.AuthenticationResponse;
 import duolingobackenduserservice.dto.CheckLoginRequest;
 import duolingobackenduserservice.dto.RegistryUserRequest;
+import duolingobackenduserservice.dto.UpdatedRequest;
 import duolingobackenduserservice.model.User;
 
 import java.rmi.registry.Registry;
@@ -18,4 +19,6 @@ public interface UserService {
 
     AuthenticationResponse login(CheckLoginRequest checkLoginRequest);
     AuthenticationResponse register(RegistryUserRequest registryUserRequest);
+
+    AuthenticationResponse updateUser(UpdatedRequest request);
 }
