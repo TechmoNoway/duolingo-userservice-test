@@ -5,8 +5,12 @@ import duolingobackenduserservice.dto.AuthenticationResponse;
 import duolingobackenduserservice.dto.CheckLoginRequest;
 import duolingobackenduserservice.dto.RegistryUserRequest;
 import duolingobackenduserservice.dto.UpdatedRequest;
+import duolingobackenduserservice.mapper.PlayerMapper;
 import duolingobackenduserservice.mapper.UserMapper;
+import duolingobackenduserservice.model.Player;
 import duolingobackenduserservice.model.User;
+import duolingobackenduserservice.service.CommonService;
+import duolingobackenduserservice.service.PlayerService;
 import duolingobackenduserservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +31,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    PlayerService playerService;
+
+    @Autowired
+    CommonService commonService;
+
     @Override
     public List<User> getAllUsers() {
         return userMapper.getAllUsers();
@@ -36,7 +46,7 @@ public class UserServiceImpl implements UserService {
     public void insertUser(RegistryUserRequest registryUserRequest) {
 
         User user = User.builder()
-                .id(String.valueOf(userMapper.getAllUsers().size() + 1))
+                .id(registryUserRequest.getId())
                 .username(registryUserRequest.getUsername())
                 .email(registryUserRequest.getEmail())
                 .password(registryUserRequest.getPassword())
@@ -81,8 +91,6 @@ public class UserServiceImpl implements UserService {
 
         String token = jwtService.generateToken(oldUser);
 
-
-
         return new AuthenticationResponse(token, "Login is successfully");
     }
 
@@ -112,27 +120,39 @@ public class UserServiceImpl implements UserService {
 
         registryUserRequest.setPassword(hashedPassword);
 
-        this.insertUser(registryUserRequest);
+        String id = commonService.generateRandomNumber(10);
+        String createdAt = commonService.createCurrentDate();
+
+        //  Create new player
+
+        Player player = Player.builder().userId(id).currentLevel(1).language("English").expPoint(0).build();
+        boolean isSuccess = playerService.insertPlayer(player);
 
         User newUser = User.builder()
+                .id(id)
                 .username(registryUserRequest.getUsername())
                 .password(registryUserRequest.getPassword())
                 .roleId("1")
+                .createdAt(createdAt)
                 .avatar(registryUserRequest.getAvatar())
                 .build();
 
+
+        registryUserRequest.setCreatedAt(createdAt);
+        registryUserRequest.setId(id);
+        this.insertUser(registryUserRequest);
+        if(!isSuccess){
+            return new AuthenticationResponse(null, "Player is created is failure");
+        }
+
+
         String token = jwtService.generateToken(newUser);
-
-
-
         return new AuthenticationResponse(token, "Register is successfully");
     }
 
     @Override
     public AuthenticationResponse updateUser(UpdatedRequest request) {
         try {
-
-
             if(!request.getOldPassword().matches("")){
                 User oldUser = userMapper.getUser(request.getUsername());
                 if(!passwordEncoder.encode(oldUser.getPassword()).matches(request.getOldPassword())){
@@ -143,6 +163,8 @@ public class UserServiceImpl implements UserService {
             if(request.getPassword().length() < 15) {
                 request.setPassword(passwordEncoder.encode(CharBuffer.wrap(request.getPassword())));
             }
+            String updatedAt = commonService.createCurrentDate();
+            request.setUpdatedAt(updatedAt);
             userMapper.updateUser(request);
 
             String token = jwtService.generateToken(request);

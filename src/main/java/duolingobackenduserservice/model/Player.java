@@ -10,7 +10,7 @@ import lombok.*;
 public class Player {
     private String id;
     private String userId;
-    private Long currentLevel;
+    private Integer currentLevel;
     private String language;
-    private Long expPoint;
+    private Integer expPoint;
 }

@@ -8,6 +8,9 @@ import java.util.List;
 public interface StreakService {
 
     List<Streak> getAllStreaks();
-    void insertStreak(Streak streak);
+
+    String insertStreak(Streak streak);
+
+    String endStreak(Streak streak);
 
 }

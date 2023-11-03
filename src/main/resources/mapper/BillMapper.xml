@@ -2,8 +2,8 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper>
-    <resultMap id="" type="">
+<mapper namespace="duolingobackenduserservice.mapper.BillMapper">
+    <resultMap id="billResultMap" type="duolingobackenduserservice.model.Bill">
 
     </resultMap>
 </mapper>

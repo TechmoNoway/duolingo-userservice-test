@@ -12,9 +12,9 @@ import java.sql.Date;
 public class Achivement {
     private String id;
     private String playerId;
-    private Long score;
+    private Integer score;
     private String sourceId;
     private String title;
-    private Date createdAt;
-    private Date updatedAt;
+    private String createdAt;
+    private String updatedAt;
 }

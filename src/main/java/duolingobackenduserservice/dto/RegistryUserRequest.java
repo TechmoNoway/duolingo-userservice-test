@@ -8,11 +8,12 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegistryUserRequest {
+    private String id;
     private String username;
     private String email;
     private String password;
     private String avatar;
     private String social;
-    private Date createdAt;
-    private Date updatedAt;
+    private String createdAt;
+    private String updatedAt;
 }
