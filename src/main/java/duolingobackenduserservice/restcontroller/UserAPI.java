@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @CrossOrigin("*")
@@ -60,6 +61,27 @@ public class UserAPI {
         return ResponseEntity.ok(result);
     }
 
+
+    @GetMapping("/getUserExceptUserId")
+    public ResponseEntity<?> getUserExceptUserId(@NonNull HttpServletRequest request) {
+        HashMap<String, Object> result = new HashMap<>();
+
+        try {
+            User user = (User) request.getAttribute("user");
+            List<User> users = userService.getUserExceptPlayerId(user.getId());
+            result.put("success", true);
+            result.put("message", "Success to call api doInsertUser");
+            result.put("data", users);
+        }catch (Exception e){
+            System.out.println(e);
+            result.put("success", false);
+            result.put("message", "Fail to call api doInsertUser");
+            result.put("data", null);
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok(result);
+    }
 
     //    This method is similar as register method
     @PostMapping("/insertuser")

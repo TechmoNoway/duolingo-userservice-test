@@ -11,6 +11,8 @@ public interface StreakService {
 
     String insertStreak(Streak streak);
 
+    List<Streak> getStreakByUserId(String userId, String language);
+
     String endStreak(Streak streak);
 
 }

@@ -1,16 +1,18 @@
 package duolingobackenduserservice.blockchain;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class BlockChain implements Serializable {
     private List<Block> blocks = new LinkedList<>();
     private Object lock = new Object();

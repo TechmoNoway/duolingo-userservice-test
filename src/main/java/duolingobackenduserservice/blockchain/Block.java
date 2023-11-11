@@ -1,16 +1,16 @@
 package duolingobackenduserservice.blockchain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 
-@Data
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Getter
+@Setter
 public class Block implements Serializable {
     private static final long serialVersionID = 1L;
 
@@ -22,5 +22,4 @@ public class Block implements Serializable {
     protected Integer nonce;
     protected String data;
     private ProofOfWork proofOfWork;
-
 }

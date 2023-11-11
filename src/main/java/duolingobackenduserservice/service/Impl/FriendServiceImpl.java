@@ -3,11 +3,14 @@ package duolingobackenduserservice.service.Impl;
 
 import duolingobackenduserservice.mapper.FriendMapper;
 import duolingobackenduserservice.model.Friend;
+import duolingobackenduserservice.model.User;
 import duolingobackenduserservice.service.CommonService;
 import duolingobackenduserservice.service.FriendService;
+import duolingobackenduserservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,10 +22,20 @@ public class FriendServiceImpl implements FriendService {
     @Autowired
     CommonService commonService;
 
-    @Override
-    public List<Friend> getAllFriends(String userId) {
+    @Autowired
+    UserService userService;
 
-        return friendMapper.getAllFriends(userId);
+    @Override
+    public List<User> getAllFriends(String userId) {
+        List<Friend> friends = friendMapper.getAllFriends(userId);
+        List<User> friendsData = new ArrayList<>();
+
+        for(int i = 0; i < friends.size(); i++) {
+            User friendDataItem = userService.getUserByUserId(friends.get(i).getUserId());
+            friendsData.add(friendDataItem);
+        }
+
+        return friendsData;
     }
 
     @Override

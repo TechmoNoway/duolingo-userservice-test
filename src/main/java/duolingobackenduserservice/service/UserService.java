@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface UserService {
     List<User> getAllUsers();
+
+    User getUserByUserId(String userId);
     void insertUser(RegistryUserRequest registryUserRequest);
 
     User checkLogin(CheckLoginRequest checkLoginRequest);
@@ -21,4 +23,6 @@ public interface UserService {
     AuthenticationResponse register(RegistryUserRequest registryUserRequest);
 
     AuthenticationResponse updateUser(UpdatedRequest request);
+
+    List<User> getUserExceptPlayerId(String userId);
 }

@@ -10,7 +10,7 @@ import java.util.List;
 public interface StreakMapper {
     List<Streak> getAllStreaks();
 
-    Streak getStreakByPlayerId(@Param("playerId") String playerId);
+    List<Streak> getStreakByPlayerId(@Param("playerId") String playerId);
     void insertStreak(Streak streak);
 
     void updateStreak(Streak streak);

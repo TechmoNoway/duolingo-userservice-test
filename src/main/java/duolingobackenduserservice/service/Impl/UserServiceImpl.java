@@ -43,6 +43,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByUserId(String userId) {
+        return userMapper.getUserByUserId(userId);
+    }
+
+    @Override
     public void insertUser(RegistryUserRequest registryUserRequest) {
 
         User user = User.builder()
@@ -87,6 +92,13 @@ public class UserServiceImpl implements UserService {
                     .build();
         }
 
+        if(!passwordEncoder.matches(CharBuffer.wrap(checkLoginRequest.getPassword()), oldUser.getPassword())){
+            return AuthenticationResponse.builder()
+                    .token(null)
+                    .message("Username or Password is incorrect !!")
+                    .build();
+        }
+
 
 
         String token = jwtService.generateToken(oldUser);
@@ -125,7 +137,7 @@ public class UserServiceImpl implements UserService {
 
         //  Create new player
 
-        Player player = Player.builder().userId(id).currentLevel(1).language("English").expPoint(0).build();
+        Player player = Player.builder().userId(id).language("English").build();
         boolean isSuccess = playerService.insertPlayer(player);
 
         User newUser = User.builder()
@@ -171,9 +183,15 @@ public class UserServiceImpl implements UserService {
 
             return new AuthenticationResponse(token, "Update is successfully");
         } catch (Exception e) {
+            e.printStackTrace();
             return new AuthenticationResponse(null, "Error Page");
         }
 
+    }
+
+    @Override
+    public List<User> getUserExceptPlayerId(String userId) {
+        return userMapper.getUserExceptPlayerId(userId);
     }
 
 

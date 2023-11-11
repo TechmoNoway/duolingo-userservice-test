@@ -40,6 +40,36 @@
         FROM USER usr
         WHERE usr.username = #{username}
     </select>
+    <select id="getUserByUserId" resultMap="userResultMap">
+        SELECT usr.id
+             , usr.username
+             , usr.email
+             , usr.password
+             , usr.avatar
+             , usr.roleid
+             , usr.createdat
+             , usr.updatedat
+        FROM USER usr
+        WHERE usr.id = #{userId}
+    </select>
+
+    <select id="getUserExceptPlayerId" resultMap="userResultMap">
+        SELECT  usr.id
+             , usr.username
+             , usr.email
+             , usr.password
+             , usr.avatar
+             , usr.roleid
+             , usr.createdat
+             , usr.updatedat
+        FROM user usr
+        WHERE usr.id != #{userId} AND usr.id not in (
+            SELECT friendid
+            FROM friend
+            WHERE userid = #{userId}
+        );
+
+    </select>
 
     <insert id="insertUser">
         INSERT INTO user ( id

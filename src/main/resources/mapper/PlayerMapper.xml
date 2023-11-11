@@ -9,6 +9,21 @@
         <result column="currentlevel" property="currentLevel"/>
         <result column="language" property="language"/>
         <result column="exppoint" property="expPoint"/>
+        <result column="score" property="score"/>
+        <result column="heart" property="heart"/>
+        <result column="lastupdatedate" property="lastUpdateDate"/>
+
+    </resultMap>
+
+    <resultMap id="rankResultMap" type="duolingobackenduserservice.dto.Rank">
+        <result column="playerid" property="playerId"/>
+        <result column="userid" property="userId"/>
+        <result column="avatar" property="avatar"/>
+        <result column="username" property="username"/>
+        <result column="email" property="email"/>
+        <result column="score" property="score"/>
+        <result column="exppoint" property="expPoint"/>
+        <result column="currentlevel" property="currentLevel"/>
     </resultMap>
 
     <select id="getAllPlayers" resultMap="playerResultMap">
@@ -17,6 +32,9 @@
              , ply.currentlevel
              , ply.language
              , ply.exppoint
+             , ply.score
+             , ply.heart
+            , ply.lastupdatedate
         FROM PLAYER ply
         WHERE 1 = 1
     </select>
@@ -26,8 +44,27 @@
              , ply.currentlevel
              , ply.language
              , ply.exppoint
+             , ply.score
+             , ply.heart
+             , ply.lastupdatedate
         FROM PLAYER ply
         WHERE ply.userid = #{userId} AND ply.language = #{language}
+    </select>
+
+    <select id="getRankLimit5" resultMap="rankResultMap">
+        SELECT ply.id as playerid,
+               ply.userid,
+               usr.avatar,
+               usr.username,
+               usr.email,
+               ply.score,
+               ply.exppoint,
+               ply.currentlevel,
+                ply.lastupdatedate
+        FROM player ply
+        INNER JOIN user usr ON usr.id = ply.userid
+        ORDER BY ply.score DESC
+            LIMIT 5;
     </select>
 
     <insert id="insertPlayer">
@@ -36,12 +73,16 @@
                          , currentlevel
                          , language
                          , exppoint
+                         , score
+                         , heart
         ) VALUES (
                      #{id}
                  , #{userId}
                  , #{currentLevel}
                  , #{language}
                  , #{expPoint}
+                 , #{score}
+                 , #{heart}
                  );
     </insert>
 
@@ -49,7 +90,8 @@
         UPDATE player
         SET CURRENTLEVEL = #{currentLevel},
             LANGUAGE = #{language},
-            EXPPOINT = #{expPoint}
+            EXPPOINT = #{expPoint},
+            LASTUPDATEDATE = #{lastupdatedate}
         WHERE ID=#{id}
     </update>
 </mapper>

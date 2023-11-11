@@ -1,6 +1,7 @@
 package duolingobackenduserservice.restcontroller;
 
 import duolingobackenduserservice.model.Friend;
+import duolingobackenduserservice.model.User;
 import duolingobackenduserservice.service.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/friend")
 public class FriendAPI {
 
@@ -22,7 +24,7 @@ public class FriendAPI {
         HashMap<String, Object> result = new HashMap<>();
 
         try {
-            List<Friend> data = friendService.getAllFriends(userId);
+            List<User> data = friendService.getAllFriends(userId);
             result.put("success", true);
             result.put("message", "Success to call api doGetAllFriends");
             result.put("data", data);
