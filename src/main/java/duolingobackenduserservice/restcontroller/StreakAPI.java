@@ -77,12 +77,13 @@ public class StreakAPI {
 
         return ResponseEntity.ok(result);
     }
-    @PutMapping("/endStreak")
-    public ResponseEntity<?> endStreak(@RequestBody Streak streak){
+    @PutMapping("/checkStreak/{language}")
+    public ResponseEntity<?> checkStreak(@RequestBody Streak streak, @NonNull HttpServletRequest request, @PathVariable String language){
         HashMap<String, Object> result = new HashMap<>();
 
         try {
-            String data = streakService.endStreak(streak);
+            User user = (User) request.getAttribute("user");
+            String data = streakService.checkStreakAndEndStreak(streak, user.getId(), language);
             result.put("success", true);
             result.put("message", "Success to call api doInsertUser");
             result.put("data", data);

@@ -13,5 +13,5 @@ public class Streak {
     private String playerId;
     private String startDate;
     private String endDate;
-    private Boolean isEnd;
+    public Boolean isEnd;
 }

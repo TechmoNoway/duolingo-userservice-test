@@ -13,7 +13,7 @@ public interface PlayerService {
 
     Player getPlayerByUserId(String userId, String language);
 
-    String updatePlayer(Player player);
+    Player updatePlayer(Player player);
 
     List<Rank> getLeaderBoard();
 }

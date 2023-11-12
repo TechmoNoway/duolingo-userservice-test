@@ -31,7 +31,7 @@ public class FriendServiceImpl implements FriendService {
         List<User> friendsData = new ArrayList<>();
 
         for(int i = 0; i < friends.size(); i++) {
-            User friendDataItem = userService.getUserByUserId(friends.get(i).getUserId());
+            User friendDataItem = userService.getUserByUserId(friends.get(i).getFriendId());
             friendsData.add(friendDataItem);
         }
 
@@ -48,6 +48,7 @@ public class FriendServiceImpl implements FriendService {
         String startDate = commonService.createCurrentDate();
         friend.setId(id);
         friend.setStartDate(startDate);
+
 
         friendMapper.insertFriend(friend);
 

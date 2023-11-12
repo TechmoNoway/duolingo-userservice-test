@@ -91,7 +91,7 @@
         SET CURRENTLEVEL = #{currentLevel},
             LANGUAGE = #{language},
             EXPPOINT = #{expPoint},
-            LASTUPDATEDATE = #{lastupdatedate}
+            LASTUPDATEDATE = #{lastUpdateDate}
         WHERE ID=#{id}
     </update>
 </mapper>

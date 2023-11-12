@@ -32,7 +32,11 @@ public class StreakUserService implements StreakService {
     @Override
     public String insertStreak(Streak streak) {
         List<Streak> checkedStreak = streakMapper.getStreakByPlayerId(streak.getPlayerId());
-        if(checkedStreak.size()>0) {
+
+        boolean checkRunningStreak = checkedStreak.stream()
+                .anyMatch(a -> !a.getIsEnd());
+
+        if(checkRunningStreak) {
             return "This player is having a streak is running";
         }
         String id = commonService.generateRandomNumber(10);
@@ -55,17 +59,25 @@ public class StreakUserService implements StreakService {
     }
 
     @Override
-    public String endStreak(Streak streak) {
+    public String checkStreakAndEndStreak(Streak streak, String userId, String language) {
         List<Streak> checkedStreak = streakMapper.getStreakByPlayerId(streak.getPlayerId());
-        if(checkedStreak.size()>0) {
-            return "This streak is not exist";
+        Player player = playerService.getPlayerByUserId(userId, language);
+        boolean checkRunningStreak = checkedStreak.stream()
+                .anyMatch(a -> !a.getIsEnd());
+        if(!checkRunningStreak) {
+            return "This player don't have any streak is running";
         }
 
-        String endDate = commonService.createCurrentDate();
-        streak.setEndDate(endDate);
-        streak.setIsEnd(true);
+        String currentDate = commonService.createCurrentDate();
+        boolean checkedOverTwoDayInStreak = commonService.areTwoDatesMoreThanOneDayApart(player.getLastUpdateDate(), currentDate);
+        if(checkedOverTwoDayInStreak) {
+            String endDate = commonService.createCurrentDate();
+            streak.setEndDate(endDate);
+            streak.setIsEnd(true);
+            streakMapper.updateStreak(streak);
+            return "End streak is successfully";
+        }
 
-        streakMapper.updateStreak(streak);
-        return "End streak is successfully";
+        return "All of them is normal";
     }
 }

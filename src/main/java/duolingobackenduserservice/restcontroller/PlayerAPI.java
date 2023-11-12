@@ -106,7 +106,7 @@ public class PlayerAPI {
         HashMap<String, Object> result = new HashMap<>();
 
         try {
-            String data = playerService.updatePlayer(player);
+            Player data = playerService.updatePlayer(player);
             result.put("success", true);
             result.put("message", "Success to call api doInsertUser");
             result.put("data", data);

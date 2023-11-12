@@ -53,15 +53,17 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public String updatePlayer(Player player) {
+    public Player updatePlayer(Player player) {
         Player checkedPlayer = playerMapper.getPlayerByUserId(player.getUserId(), player.getLanguage());
         if(checkedPlayer == null){
-            return "This player is not exist";
+            return checkedPlayer;
         }
+        String lastUpdateDate = commonService.createCurrentDate();
         player.setId(checkedPlayer.getId());
+        player.setLastUpdateDate(lastUpdateDate);
 
         playerMapper.updatePlayer(player);
-        return "Update player is successfully";
+        return player;
     }
 
     @Override
@@ -70,7 +72,7 @@ public class PlayerServiceImpl implements PlayerService {
 
         int total = ranks.size();
 
-        for(int i = 0; i < total; i++){
+        for(int i = 0; i < ranks.size(); i++){
             String currentLevel = ranks.get(i).getCurrentLevel();
             String[] levelArr = currentLevel.split(".");
             if(levelArr.length > 1) {

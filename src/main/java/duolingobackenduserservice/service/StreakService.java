@@ -13,6 +13,7 @@ public interface StreakService {
 
     List<Streak> getStreakByUserId(String userId, String language);
 
-    String endStreak(Streak streak);
+    String checkStreakAndEndStreak(Streak streak, String userId, String language);
+
 
 }
