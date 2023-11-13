@@ -1,10 +1,7 @@
 package duolingobackenduserservice.restcontroller;
 
 
-import duolingobackenduserservice.dto.AuthenticationResponse;
-import duolingobackenduserservice.dto.CheckLoginRequest;
-import duolingobackenduserservice.dto.RegistryUserRequest;
-import duolingobackenduserservice.dto.UpdatedRequest;
+import duolingobackenduserservice.dto.*;
 import duolingobackenduserservice.model.User;
 import duolingobackenduserservice.service.UserService;
 import io.micrometer.common.lang.NonNull;
@@ -140,6 +137,24 @@ public class UserAPI {
             e.printStackTrace();
         }
 
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/sendemailforresetpassword")
+    ResponseEntity<?> sendEmailForResetPassword(@RequestBody InputSendEmailData request) {
+        HashMap<String, Object> result = new HashMap<>();
+        try {
+
+            String data = userService.sendEmailForResetPassword(request);
+            result.put("success", true);
+            result.put("message", "Success to call API GetAllUsers");
+            result.put("data", data);
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("message", "Fail to call API GetAllUsers");
+            result.put("data", null);
+            e.printStackTrace();
+        }
         return ResponseEntity.ok(result);
     }
 }

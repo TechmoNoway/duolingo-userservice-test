@@ -18,4 +18,6 @@ public interface UserMapper {
     List<User> getUserExceptPlayerId(@Param("userId") String userId);
 
     void updateUser(User user);
+
+    User getUserByEmail(@Param("email") String email);
 }

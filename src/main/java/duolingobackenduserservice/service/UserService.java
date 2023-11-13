@@ -1,9 +1,6 @@
 package duolingobackenduserservice.service;
 
-import duolingobackenduserservice.dto.AuthenticationResponse;
-import duolingobackenduserservice.dto.CheckLoginRequest;
-import duolingobackenduserservice.dto.RegistryUserRequest;
-import duolingobackenduserservice.dto.UpdatedRequest;
+import duolingobackenduserservice.dto.*;
 import duolingobackenduserservice.model.User;
 
 import java.rmi.registry.Registry;
@@ -25,4 +22,6 @@ public interface UserService {
     AuthenticationResponse updateUser(UpdatedRequest request);
 
     List<User> getUserExceptPlayerId(String userId);
+
+    String sendEmailForResetPassword(InputSendEmailData data);
 }

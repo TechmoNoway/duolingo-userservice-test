@@ -1,15 +1,13 @@
 package duolingobackenduserservice.service.Impl;
 
 import duolingobackenduserservice.config.JwtService;
-import duolingobackenduserservice.dto.AuthenticationResponse;
-import duolingobackenduserservice.dto.CheckLoginRequest;
-import duolingobackenduserservice.dto.RegistryUserRequest;
-import duolingobackenduserservice.dto.UpdatedRequest;
+import duolingobackenduserservice.dto.*;
 import duolingobackenduserservice.mapper.PlayerMapper;
 import duolingobackenduserservice.mapper.UserMapper;
 import duolingobackenduserservice.model.Player;
 import duolingobackenduserservice.model.User;
 import duolingobackenduserservice.service.CommonService;
+import duolingobackenduserservice.service.EmailService;
 import duolingobackenduserservice.service.PlayerService;
 import duolingobackenduserservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     CommonService commonService;
+
+    @Autowired
+    EmailService emailService;
 
     @Override
     public List<User> getAllUsers() {
@@ -66,6 +67,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User checkLogin(CheckLoginRequest checkLoginRequest) {
+
         return userMapper.getAllUsers().stream()
                 .filter(user -> (checkLoginRequest.getUsername().equals(user.getUsername())
                     && passwordEncoder.encode(user.getPassword()).matches(checkLoginRequest.getPassword()))
@@ -84,15 +86,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public AuthenticationResponse login(CheckLoginRequest checkLoginRequest) {
 //        Check user is exist
-        User oldUser = this.checkLogin(checkLoginRequest);
+        User oldUser = userMapper.getUser(checkLoginRequest.getUsername());
         if (oldUser == null) {
             return AuthenticationResponse.builder()
                     .token(null)
                     .message("Username or Password is incorrect !!")
                     .build();
         }
+        boolean checkedPassword = passwordEncoder.matches(CharBuffer.wrap(checkLoginRequest.getPassword()), oldUser.getPassword());
 
-        if(!passwordEncoder.matches(CharBuffer.wrap(checkLoginRequest.getPassword()), oldUser.getPassword())){
+        if(!checkedPassword){
             return AuthenticationResponse.builder()
                     .token(null)
                     .message("Username or Password is incorrect !!")
@@ -108,16 +111,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AuthenticationResponse register(RegistryUserRequest registryUserRequest) {
-
         //        Check user is exist
-        CheckLoginRequest checkedUser = CheckLoginRequest.builder()
-                .password(registryUserRequest.getPassword())
-                .username(registryUserRequest.getUsername())
-                .build();
-        User oldUser = this.checkLogin(checkedUser);
-        if (oldUser != null) {
+        User oldUser = userMapper.getUserByEmail(registryUserRequest.getEmail());
+        User oldUserWithUsername = userMapper.getUser(registryUserRequest.getUsername());
+        if (oldUser != null || oldUserWithUsername != null) {
             String token = null;
-
             if(registryUserRequest.getSocial().matches("social")){
                 token = jwtService.generateToken(oldUser);
             }
@@ -166,8 +164,11 @@ public class UserServiceImpl implements UserService {
     public AuthenticationResponse updateUser(UpdatedRequest request) {
         try {
             if(!request.getOldPassword().matches("")){
-                User oldUser = userMapper.getUser(request.getUsername());
-                if(!passwordEncoder.encode(oldUser.getPassword()).matches(request.getOldPassword())){
+                User oldUser = userMapper.getUserByEmail(request.getEmail());
+
+                boolean checkedOldPassword = passwordEncoder.matches(CharBuffer.wrap(request.getOldPassword()), oldUser.getPassword());
+
+                if(!checkedOldPassword){
                     return new AuthenticationResponse(null, "Current Password is incorrect!!");
                 }
             }
@@ -192,6 +193,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getUserExceptPlayerId(String userId) {
         return userMapper.getUserExceptPlayerId(userId);
+    }
+
+    @Override
+    public String sendEmailForResetPassword(InputSendEmailData data) {
+        String message = "Send Email is successfully";
+
+        try {
+            InputEmailData emailData = new InputEmailData();
+            EmailDetail details = new EmailDetail();
+            details.setRecipient(data.getEmail());
+            details.setSubject(message);
+            emailData.setDetail(details);
+            emailService.sendSimpleMail(emailData, "resetPasswordLetter");
+        } catch (Exception e) {
+            message = "Send email is failed";
+        }
+
+        return message;
     }
 
 
