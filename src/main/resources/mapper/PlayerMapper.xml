@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="duolingobackenduserservice.mapper.PlayerMapper">
+    <resultMap id="playerResultMap" type="duolingobackenduserservice.model.Player">
+        <result column="id" property="id"/>
+        <result column="userid" property="userId"/>
+        <result column="currentlevel" property="currentLevel"/>
+        <result column="language" property="language"/>
+        <result column="exppoint" property="expPoint"/>
+        <result column="score" property="score"/>
+        <result column="heart" property="heart"/>
+        <result column="lastupdatedate" property="lastUpdateDate"/>
+
+    </resultMap>
+
+    <resultMap id="rankResultMap" type="duolingobackenduserservice.dto.Rank">
+        <result column="playerid" property="playerId"/>
+        <result column="userid" property="userId"/>
+        <result column="avatar" property="avatar"/>
+        <result column="username" property="username"/>
+        <result column="email" property="email"/>
+        <result column="score" property="score"/>
+        <result column="exppoint" property="expPoint"/>
+        <result column="currentlevel" property="currentLevel"/>
+    </resultMap>
+
+    <select id="getAllPlayers" resultMap="playerResultMap">
+        SELECT ply.id
+             , ply.userid
+             , ply.currentlevel
+             , ply.language
+             , ply.exppoint
+             , ply.score
+             , ply.heart
+            , ply.lastupdatedate
+        FROM PLAYER ply
+        WHERE 1 = 1
+    </select>
+    <select id="getPlayerByUserId" resultMap="playerResultMap">
+        SELECT ply.id
+             , ply.userid
+             , ply.currentlevel
+             , ply.language
+             , ply.exppoint
+             , ply.score
+             , ply.heart
+             , ply.lastupdatedate
+        FROM PLAYER ply
+        WHERE ply.userid = #{userId} AND ply.language = #{language}
+    </select>
+
+    <select id="getRankLimit5" resultMap="rankResultMap">
+        SELECT ply.id as playerid,
+               ply.userid,
+               usr.avatar,
+               usr.username,
+               usr.email,
+               ply.score,
+               ply.exppoint,
+               ply.currentlevel,
+                ply.lastupdatedate
+        FROM player ply
+        INNER JOIN user usr ON usr.id = ply.userid
+        ORDER BY ply.score DESC
+            LIMIT 5;
+    </select>
+
+    <insert id="insertPlayer">
+        INSERT INTO player ( id
+                         , userid
+                         , currentlevel
+                         , language
+                         , exppoint
+                         , score
+                         , heart
+        ) VALUES (
+                     #{id}
+                 , #{userId}
+                 , #{currentLevel}
+                 , #{language}
+                 , #{expPoint}
+                 , #{score}
+                 , #{heart}
+                 );
+    </insert>
+
+    <update id="updatePlayer">
+        UPDATE player
+        SET CURRENTLEVEL = #{currentLevel},
+            LANGUAGE = #{language},
+            EXPPOINT = #{expPoint},
+            LASTUPDATEDATE = #{lastUpdateDate}
+        WHERE ID=#{id}
+    </update>
+</mapper>

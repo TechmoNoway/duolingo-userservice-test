@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="duolingobackenduserservice.mapper.AchivementMapper">
+    <resultMap id="achivementResultMap" type="duolingobackenduserservice.model.Achivement">
+
+        <result column="id" property="id"/>
+        <result column="playerid" property="playerId"/>
+        <result column="score" property="score"/>
+        <result column="sourceid" property="sourceId"/>
+        <result column="title" property="title"/>
+        <result column="createdat" property="createdAt"/>
+        <result column="updatedat" property="updatedAt"/>
+
+    </resultMap>
+
+    <select id="getAllAchivements" resultMap="achivementResultMap">
+        SELECT ply.id
+             , ply.playerid
+             , ply.score
+             , ply.sourceid
+             , ply.title
+            , ply.createdat
+             , ply.updatedat
+        FROM achivement ply
+        WHERE 1 = 1
+    </select>
+    <select id="getAchivementsByPlayerId" resultMap="achivementResultMap">
+        SELECT ply.id
+             , ply.playerid
+             , ply.score
+             , ply.sourceid
+             , ply.title
+             , ply.createdat
+             , ply.updatedat
+        FROM achivement ply
+        WHERE ply.playerid = #{playerId}
+    </select>
+
+    <insert id="insertAchivement">
+        INSERT INTO achivement ( id
+                           , playerid
+                           , score
+                           , sourceid
+                           , title
+                           , createdat
+                           , updatedat
+        ) VALUES (
+                     #{id}
+                 , #{playerId}
+                 , #{score}
+                 , #{sourceId}
+                 , #{title}
+                  , #{createdAt}
+                  , #{updatedAt}
+                 );
+    </insert>
+</mapper>

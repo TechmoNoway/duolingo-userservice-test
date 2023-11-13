@@ -1,21 +1,19 @@
 package duolingobackenduserservice.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Date;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegistryUserRequest {
+    private String id;
     private String username;
     private String email;
     private String password;
     private String avatar;
-    private Date createdAt;
-    private Date updatedAt;
+    private String social;
+    private String createdAt;
+    private String updatedAt;
 }

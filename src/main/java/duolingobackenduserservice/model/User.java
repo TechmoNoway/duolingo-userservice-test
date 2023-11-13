@@ -22,8 +22,8 @@ public class User implements UserDetails {
     private String password;
     private String avatar;
     private String roleId;
-    private Date createdAt;
-    private Date updatedAt;
+    private String createdAt;
+    private String updatedAt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

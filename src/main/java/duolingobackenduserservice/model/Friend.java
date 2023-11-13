@@ -4,8 +4,7 @@ import lombok.*;
 
 import java.sql.Date;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -13,5 +12,5 @@ public class Friend {
     private String id;
     private String userId;
     private String friendId;
-    private Date startDate;
+    private String startDate;
 }

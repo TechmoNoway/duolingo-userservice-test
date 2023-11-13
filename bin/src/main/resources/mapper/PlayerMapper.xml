@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="duolingobackenduserservice.mapper.PlayerMapper">
+    <resultMap id="playerResultMap" type="duolingobackenduserservice.model.Player">
+        <result column="id" property="id"/>
+        <result column="userid" property="userId"/>
+        <result column="currentlevel" property="currentLevel"/>
+        <result column="language" property="language"/>
+        <result column="exppoint" property="expPoint"/>
+    </resultMap>
+
+    <select id="getAllPlayers" resultMap="playerResultMap">
+        SELECT ply.id
+             , ply.userid
+             , ply.currentlevel
+             , ply.language
+             , ply.exppoint
+        FROM PLAYER ply
+        WHERE 1 = 1
+    </select>
+    <select id="getPlayerByUserId" resultMap="playerResultMap">
+        SELECT ply.id
+             , ply.userid
+             , ply.currentlevel
+             , ply.language
+             , ply.exppoint
+        FROM PLAYER ply
+        WHERE ply.userid = #{userId} AND ply.language = #{language}
+    </select>
+
+    <insert id="insertPlayer">
+        INSERT INTO player ( id
+                         , userid
+                         , currentlevel
+                         , language
+                         , exppoint
+        ) VALUES (
+                     #{id}
+                 , #{userId}
+                 , #{currentLevel}
+                 , #{language}
+                 , #{expPoint}
+                 );
+    </insert>
+
+    <update id="updatePlayer">
+        UPDATE player
+        SET CURRENTLEVEL = #{currentLevel},
+            LANGUAGE = #{language},
+            EXPPOINT = #{expPoint}
+        WHERE ID=#{id}
+    </update>
+</mapper>

@@ -12,4 +12,12 @@ public interface UserMapper {
     void insertUser(User user);
 
     User getUser(@Param("username") String username);
+
+    User getUserByUserId(@Param("userId") String userId);
+
+    List<User> getUserExceptPlayerId(@Param("userId") String userId);
+
+    void updateUser(User user);
+
+    User getUserByEmail(@Param("email") String email);
 }

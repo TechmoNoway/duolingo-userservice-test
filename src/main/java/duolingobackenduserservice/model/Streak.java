@@ -4,15 +4,14 @@ import lombok.*;
 
 import java.sql.Date;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class Streak {
     private String id;
     private String playerId;
-    private Date startDate;
-    private Date endDate;
-    private Boolean isEnd;
+    private String startDate;
+    private String endDate;
+    public Boolean isEnd;
 }

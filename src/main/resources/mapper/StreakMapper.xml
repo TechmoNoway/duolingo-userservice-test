@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="duolingobackenduserservice.mapper.StreakMapper">
+    <resultMap id="streakResultMap" type="duolingobackenduserservice.model.Streak">
+        <result column="id" property="id"/>
+        <result column="playerid" property="playerId"/>
+        <result column="startdate" property="startDate"/>
+        <result column="enddate" property="endDate"/>
+        <result column="isend" property="isEnd"/>
+
+    </resultMap>
+    <select id="getAllStreaks" resultMap="streakResultMap">
+        SELECT ply.id
+             , ply.playerid
+             , ply.startdate
+             , ply.enddate
+             , ply.isend
+        FROM streak ply
+        WHERE 1 = 1
+    </select>
+    <select id="getStreakByPlayerId" resultMap="streakResultMap">
+        SELECT ply.id
+             , ply.playerid
+             , ply.startdate
+             , ply.enddate
+             , ply.isend
+        FROM streak ply
+        WHERE ply.playerid = #{playerId}
+    </select>
+
+    <insert id="insertStreak">
+        INSERT INTO streak ( id
+                           , playerid
+                           , startdate
+                           , enddate
+                           , isend
+        ) VALUES (
+                     #{id}
+                 , #{playerId}
+                 , #{startDate}
+                 , #{endDate}
+                 , #{isEnd}
+                 );
+    </insert>
+
+    <update id="updateStreak">
+        UPDATE streak
+        SET ENDDATE = #{endDate},
+            ISEND = #{isEnd}
+        WHERE ID=#{id}
+    </update>
+</mapper>

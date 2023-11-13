@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="duolingobackenduserservice.mapper.UserMapper">
+
+    <resultMap id="userResultMap" type="duolingobackenduserservice.model.User">
+        <result column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="email" property="email"/>
+        <result column="avatar" property="avatar"/>
+        <result column="roleid" property="roleId"/>
+        <result column="createdat" property="createdAt"/>
+        <result column="updatedat" property="updatedAt"/>
+
+    </resultMap>
+
+    <select id="getAllUsers" resultMap="userResultMap">
+        SELECT usr.id
+             , usr.username
+             , usr.email
+             , usr.password
+             , usr.avatar
+             , usr.roleid
+             , usr.createdat
+             , usr.updatedat
+        FROM USER usr
+        WHERE 1 = 1
+    </select>
+    <select id="getUser" resultMap="userResultMap">
+        SELECT usr.id
+        , usr.username
+        , usr.email
+        , usr.password
+        , usr.avatar
+        , usr.roleid
+        , usr.createdat
+        , usr.updatedat
+        FROM USER usr
+        WHERE usr.username = #{username}
+    </select>
+
+    <insert id="insertUser">
+        INSERT INTO user ( id
+                         , username
+                         , email
+                         , password
+                         , avatar
+                         , roleid
+                         , createdat
+                         , updatedat
+        ) VALUES (
+                     #{id}
+                 , #{username}
+                 , #{email}
+                 , #{password}
+                 , #{avatar}
+                 , #{roleId}
+                 , #{createdAt}
+                 , #{updatedAt}
+                 );
+    </insert>
+
+    <update id="updateUser">
+        UPDATE user
+        SET PASSWORD = #{password},
+            AVATAR = #{avatar},
+            EMAIL = #{email},
+            USERNAME = #{username},
+            ROLEID = #{roleId}
+        WHERE ID=#{id}
+    </update>
+
+</mapper>

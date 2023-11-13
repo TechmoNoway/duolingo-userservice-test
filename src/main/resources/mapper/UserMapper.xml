@@ -28,6 +28,20 @@
         FROM USER usr
         WHERE 1 = 1
     </select>
+
+    <select id="getUserByEmail" resultMap="userResultMap">
+        SELECT usr.id
+             , usr.username
+             , usr.email
+             , usr.password
+             , usr.avatar
+             , usr.roleid
+             , usr.createdat
+             , usr.updatedat
+        FROM USER usr
+        WHERE usr.email = #{email}
+    </select>
+
     <select id="getUser" resultMap="userResultMap">
         SELECT usr.id
         , usr.username
@@ -40,6 +54,36 @@
         FROM USER usr
         WHERE usr.username = #{username}
     </select>
+    <select id="getUserByUserId" resultMap="userResultMap">
+        SELECT usr.id
+             , usr.username
+             , usr.email
+             , usr.password
+             , usr.avatar
+             , usr.roleid
+             , usr.createdat
+             , usr.updatedat
+        FROM USER usr
+        WHERE usr.id = #{userId}
+    </select>
+
+    <select id="getUserExceptPlayerId" resultMap="userResultMap">
+        SELECT  usr.id
+             , usr.username
+             , usr.email
+             , usr.password
+             , usr.avatar
+             , usr.roleid
+             , usr.createdat
+             , usr.updatedat
+        FROM user usr
+        WHERE usr.id != #{userId} AND usr.id not in (
+            SELECT friendid
+            FROM friend
+            WHERE userid = #{userId}
+        );
+
+    </select>
 
     <insert id="insertUser">
         INSERT INTO user ( id
@@ -50,17 +94,26 @@
                          , roleid
                          , createdat
                          , updatedat
-                         ) VALUES (
-                           #{id}
-                         , #{username}
-                         , #{email}
-                         , #{password}
-                         , #{avatar}
-                         , #{roleId}
-                         , #{createdAt}
-                         , #{updatedAt}
-                         );
+        ) VALUES (
+                     #{id}
+                 , #{username}
+                 , #{email}
+                 , #{password}
+                 , #{avatar}
+                 , #{roleId}
+                 , #{createdAt}
+                 , #{updatedAt}
+                 );
     </insert>
 
+    <update id="updateUser">
+        UPDATE user
+        SET PASSWORD = #{password},
+            AVATAR = #{avatar},
+            EMAIL = #{email},
+            USERNAME = #{username},
+            ROLEID = #{roleId}
+        WHERE ID=#{id}
+    </update>
 
 </mapper>
