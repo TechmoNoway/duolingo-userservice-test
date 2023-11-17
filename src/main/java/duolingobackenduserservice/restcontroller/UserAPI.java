@@ -80,6 +80,26 @@ public class UserAPI {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/checkTokenForResetPassword/{token}")
+    public ResponseEntity<?> checkTokenForResetPassword(@PathVariable String token) {
+        HashMap<String, Object> result = new HashMap<>();
+
+        try {
+            CheckedForResetPasswordResponse data = userService.checkTokenForResetPassword(token);
+            result.put("success", true);
+            result.put("message", "Success to call api doInsertUser");
+            result.put("data", data);
+        }catch (Exception e){
+            System.out.println(e);
+            result.put("success", false);
+            result.put("message", "Fail to call api doInsertUser");
+            result.put("data", null);
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok(result);
+    }
+
     //    This method is similar as register method
     @PostMapping("/insertuser")
     public ResponseEntity<?> doInsertUser(@RequestBody RegistryUserRequest registryUserRequest){
@@ -157,4 +177,6 @@ public class UserAPI {
         }
         return ResponseEntity.ok(result);
     }
+
+
 }

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -69,8 +70,8 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public List<Rank> getLeaderBoard() {
         List<Rank> ranks = playerMapper.getRankLimit5();
+        List<Rank> endRanks = new ArrayList<>();
 
-        int total = ranks.size();
 
         for(int i = 0; i < ranks.size(); i++){
             String currentLevel = ranks.get(i).getCurrentLevel();
@@ -78,15 +79,15 @@ public class PlayerServiceImpl implements PlayerService {
             if(levelArr.length > 1) {
                 if(Integer.parseInt(levelArr[1]) < 0) {
                     if(Integer.parseInt(levelArr[2]) < 6) {
-                        ranks.remove(i);
+                        endRanks.add(ranks.get(i));
                     }
                 }
-            }
-            else {
-                ranks.remove(i);
+                else {
+                    endRanks.add(ranks.get(i));
+                }
             }
         }
 
-        return ranks;
+        return endRanks;
     }
 }

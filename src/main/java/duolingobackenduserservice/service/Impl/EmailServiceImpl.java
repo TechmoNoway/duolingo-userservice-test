@@ -1,6 +1,7 @@
 package duolingobackenduserservice.service.Impl;
 
 import duolingobackenduserservice.dto.EmailDetail;
+import duolingobackenduserservice.dto.EmailVariable;
 import duolingobackenduserservice.dto.InputEmailData;
 import duolingobackenduserservice.service.EmailService;
 import jakarta.mail.internet.MimeMessage;
@@ -25,8 +26,11 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public String sendSimpleMail(InputEmailData detail, String template) {
         EmailDetail details = detail.getDetail();
+
         try {
             Context context = new Context();
+
+            context.setVariable("path", details.getVariables().getPath());
 
             String process = templateEngine.process(template, context);
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -41,6 +45,7 @@ public class EmailServiceImpl implements EmailService {
 
         // Catch block to handle the exceptions
         catch (Exception e) {
+            e.printStackTrace();
             return "Error while Sending Mail";
         }
     }

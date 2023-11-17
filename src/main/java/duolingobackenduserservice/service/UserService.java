@@ -24,4 +24,7 @@ public interface UserService {
     List<User> getUserExceptPlayerId(String userId);
 
     String sendEmailForResetPassword(InputSendEmailData data);
+
+
+    CheckedForResetPasswordResponse checkTokenForResetPassword(String token);
 }

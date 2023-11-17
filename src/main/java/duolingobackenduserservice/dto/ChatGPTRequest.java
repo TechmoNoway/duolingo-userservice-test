@@ -5,14 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class EmailDetail {
-    private String recipient;
-    private String msgBody;
-    private String subject;
-    private String attachment;
-    private EmailVariable variables;
+public class ChatGPTRequest {
+    private String model;
+
+    private List<ChatGPTMessage> messages;
 }

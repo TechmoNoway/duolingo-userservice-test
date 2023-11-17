@@ -11,6 +11,9 @@ import duolingobackenduserservice.service.EmailService;
 import duolingobackenduserservice.service.PlayerService;
 import duolingobackenduserservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +40,14 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     EmailService emailService;
+
+    @Autowired
+    UserDetailsService userDetailsService;
+
+
+
+    @Value("${frontend.url}")
+    private String frontendPath;
 
     @Override
     public List<User> getAllUsers() {
@@ -163,7 +174,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public AuthenticationResponse updateUser(UpdatedRequest request) {
         try {
-            if(!request.getOldPassword().matches("")){
+            if(request.getOldPassword() != null && !request.getOldPassword().matches("")){
                 User oldUser = userMapper.getUserByEmail(request.getEmail());
 
                 boolean checkedOldPassword = passwordEncoder.matches(CharBuffer.wrap(request.getOldPassword()), oldUser.getPassword());
@@ -177,6 +188,7 @@ public class UserServiceImpl implements UserService {
                 request.setPassword(passwordEncoder.encode(CharBuffer.wrap(request.getPassword())));
             }
             String updatedAt = commonService.createCurrentDate();
+            System.out.println(request.getPassword());
             request.setUpdatedAt(updatedAt);
             userMapper.updateUser(request);
 
@@ -198,19 +210,48 @@ public class UserServiceImpl implements UserService {
     @Override
     public String sendEmailForResetPassword(InputSendEmailData data) {
         String message = "Send Email is successfully";
-
+        User user = userMapper.getUserByEmail(data.getEmail());
         try {
+//            Create token
+            String token = jwtService.generateToken(user);
+
+//           End path
+            String endPath = frontendPath+"signin/"+token+"/changePassword";
+
             InputEmailData emailData = new InputEmailData();
             EmailDetail details = new EmailDetail();
             details.setRecipient(data.getEmail());
             details.setSubject(message);
+            EmailVariable variables = EmailVariable.builder()
+                    .path(endPath)
+                    .build();
+            details.setVariables(variables);
             emailData.setDetail(details);
+
             emailService.sendSimpleMail(emailData, "resetPasswordLetter");
         } catch (Exception e) {
+            e.printStackTrace();
             message = "Send email is failed";
         }
 
         return message;
+    }
+
+    @Override
+    public CheckedForResetPasswordResponse checkTokenForResetPassword(String token) {
+        String username = jwtService.extractUsername(token);
+        if(username != null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+            return CheckedForResetPasswordResponse.builder()
+                    .isExpired(false)
+                    .userDetails(userDetails)
+                    .build();
+        }
+        return CheckedForResetPasswordResponse.builder()
+                .isExpired(true)
+                .userDetails(null)
+                .build();
     }
 
 
