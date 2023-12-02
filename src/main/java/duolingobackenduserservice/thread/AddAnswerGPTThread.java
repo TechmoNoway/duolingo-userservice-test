@@ -20,6 +20,7 @@ public class AddAnswerGPTThread implements Runnable{
     @Override
     public void run() {
         String answer = chatGPTService.getChatGPTRespone(question);
+        System.out.println(answer);
         setAnswer(answer);
     }
 

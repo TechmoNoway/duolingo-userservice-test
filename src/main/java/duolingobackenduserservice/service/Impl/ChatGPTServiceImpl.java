@@ -4,19 +4,18 @@ import duolingobackenduserservice.dto.ChatGPTMessage;
 import duolingobackenduserservice.dto.ChatGPTRequest;
 import duolingobackenduserservice.dto.ChatGPTResponse;
 import duolingobackenduserservice.service.ChatGPTService;
-import duolingobackenduserservice.thread.AddAnswerGPTThread;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ChatGPTServiceImpl implements ChatGPTService {
@@ -52,29 +51,25 @@ public class ChatGPTServiceImpl implements ChatGPTService {
 
     @Override
     public List<String> getAnswersForQuestionSet(List<String> request) {
-        List<String> resultList = new ArrayList<>();
-        List<Thread> threads = new ArrayList<>();
+        String question = String.join(",", request);
+        String answer = getChatGPTRespone(question);
 
-        for(int i = 0; i < request.size(); i++) {
+        List<String> answerSet = List.of(answer.split("\\n\\n"));
 
-            AddAnswerGPTThread addAnswerGPTThread = new AddAnswerGPTThread(this, request.get(i));
-            Thread thread = new Thread(addAnswerGPTThread);
-            threads.add(thread);
-            thread.start();
-        }
-
-        try {
-            // Wait for all threads to finish
-            for (Thread thread : threads) {
-                thread.join();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
-        return resultList;
+        return removeEmptyValue(answerSet);
     }
 
+
+    public List<String> removeEmptyValue(List<String> data) {
+        List<String> newList = new ArrayList<>();
+
+        for (String value : data) {
+            if (value != null && !value.trim().isEmpty() && !value.matches("^[\\p{Punct}\\s]+$")) {
+                newList.add(value);
+            }
+        }
+
+        return newList;
+    }
 
 }
