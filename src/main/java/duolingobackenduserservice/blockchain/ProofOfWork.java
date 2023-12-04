@@ -8,22 +8,23 @@ import java.util.Map;
 public class ProofOfWork implements Serializable {
     private Block mBlock;
     private BigInteger mTarget;
-    public static int mDifficult;
+    public static int mDiffcult;
 
     public ProofOfWork(Block mBlock) {
         this.mBlock = mBlock;
         mTarget = BigInteger.ONE;
-        mTarget = mTarget.shiftLeft(256 - ProofOfWork.mDifficult);
+        mTarget = mTarget.shiftLeft(256 - ProofOfWork.mDiffcult);
     }
 
     private String prePareData(int nonce) {
-        String result = mBlock.getPreviousHash()
-                + mBlock.getData()
-                + mBlock.getTimestamp()
-                + Integer.toHexString(mTarget.intValue())
-                + Integer.toHexString(nonce);
+        String result = mBlock.getPreviousHash() +
+                mBlock.getData() +
+                mBlock.getTimestamp() +
+                Integer.toHexString(mTarget.intValue()) +
+                Integer.toHexString(nonce);
         return result;
     }
+
 
     public Map<String, String> run() {
         String hash = "";
@@ -37,14 +38,12 @@ public class ProofOfWork implements Serializable {
             } else {
                 nonce++;
             }
-
         }
-
-        String validation = mBlock.getPreviousHash()
-                + mBlock.getData()
-                + mBlock.getTimestamp()
-                + Integer.toHexString(mTarget.intValue())
-                + Integer.toHexString(nonce);
+        String validation = mBlock.getPreviousHash() +
+                mBlock.getData() +
+                mBlock.getTimestamp() +
+                Integer.toHexString(mTarget.intValue()) +
+                Integer.toHexString(nonce);
         if (Utils.hash256(validation).equals(hash)) {
             Map<String, String> map = new HashMap<>(100);
             map.put("nonce", nonce + "");
@@ -53,6 +52,9 @@ public class ProofOfWork implements Serializable {
         } else {
             return null;
         }
+
     }
+
+
 
 }

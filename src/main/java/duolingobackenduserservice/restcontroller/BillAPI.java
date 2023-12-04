@@ -1,6 +1,7 @@
 package duolingobackenduserservice.restcontroller;
 
 
+import duolingobackenduserservice.dto.BillDetail;
 import duolingobackenduserservice.model.Bill;
 import duolingobackenduserservice.service.BillService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/bill")
+@CrossOrigin("*")
 public class BillAPI {
 
     @Autowired
@@ -35,7 +37,7 @@ public class BillAPI {
     }
 
     @PostMapping("/insertbill")
-    public ResponseEntity<?> doInsertBill(@RequestBody Bill bill){
+    public ResponseEntity<?> doInsertBill(@RequestBody BillDetail bill){
         HashMap<String, Object> result = new HashMap<>();
 
         try {
@@ -47,6 +49,7 @@ public class BillAPI {
             result.put("success", false);
             result.put("message", "Fail to call api doInsertBill");
             result.put("data", null);
+            e.printStackTrace();
         }
 
         return ResponseEntity.ok(result);

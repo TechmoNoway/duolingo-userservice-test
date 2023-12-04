@@ -4,6 +4,69 @@
 
 <mapper namespace="duolingobackenduserservice.mapper.BillMapper">
     <resultMap id="billResultMap" type="duolingobackenduserservice.model.Bill">
-
+        <result column="id" property="id"/>
+        <result column="userid" property="userId"/>
+        <result column="title" property="title"/>
+        <result column="description" property="description"/>
+        <result column="price" property="price"/>
+        <result column="payment" property="payment"/>
+        <result column="createdat" property="createdAt"/>
+        <result column="updatedat" property="updatedAt"/>
     </resultMap>
+
+
+    <select id="getAllBill" resultMap="billResultMap">
+        SELECT usr.id
+             , usr.userid
+             , usr.title
+             , usr.description
+             , usr.price
+             , usr.payment
+             , usr.createdat
+             , usr.updatedat
+        FROM BILL usr
+        WHERE 1 = 1
+    </select>
+
+    <select id="getBillsByUserId" resultMap="billResultMap">
+        SELECT usr.id
+             , usr.userid
+             , usr.title
+             , usr.description
+             , usr.price
+             , usr.payment
+             , usr.createdat
+             , usr.updatedat
+        FROM BILL usr
+        WHERE usr.userid = #{userId}
+    </select>
+
+
+    <insert id="insertBills">
+        INSERT INTO bill ( id
+                         , userid
+                         , title
+                         , description
+                         , price
+                         , payment
+                         , createdat
+                         , updatedat
+        ) VALUES (
+                     #{id}
+                 , #{userId}
+                 , #{title}
+                 , #{description}
+                 , #{price}
+                 , #{payment}
+                 , #{createdAt}
+                 , #{updatedAt}
+                 );
+    </insert>
+
+    <update id="updateBill">
+        UPDATE bill
+        SET title = #{title},
+            description = #{description}
+        WHERE ID=#{id}
+    </update>
 </mapper>

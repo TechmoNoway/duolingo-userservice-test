@@ -16,6 +16,6 @@ public class Bill {
     private String description;
     private Double price;
     private String payment;
-    private Date createdAt;
-    private Date updatedAt;
+    private String createdAt;
+    private String updatedAt;
 }

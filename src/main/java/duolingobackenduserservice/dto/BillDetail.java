@@ -11,6 +11,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class BillDetail {
     private Double total;
+    private String cardNumber;
+    private String userId;
+    private String cVV;
+    private String expiredDate;
     private String currency;
     private String method;
     private String intent;
