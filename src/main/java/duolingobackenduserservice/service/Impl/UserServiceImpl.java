@@ -188,7 +188,6 @@ public class UserServiceImpl implements UserService {
                 request.setPassword(passwordEncoder.encode(CharBuffer.wrap(request.getPassword())));
             }
             String updatedAt = commonService.createCurrentDate();
-            System.out.println(request.getPassword());
             request.setUpdatedAt(updatedAt);
             userMapper.updateUser(request);
 
